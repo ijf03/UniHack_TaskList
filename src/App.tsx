@@ -10,17 +10,18 @@ function App() {
 
   return (
     <>
-      <div className="container mx-auto p-4 float-left">
+    <div className="flex flex-row">
+      <div className="p-4 flex flex-col">
+      <h1 className="text-4xl font-bold text-center">Task List</h1>
         <AddTaskForm onSubmit={addTask} />
         <TaskList
           tasks={tasks}
           onCompletedChange={setTaskCompleted}
           onDelete={deleteTask}
-        />      
+        />
       </div>
-      <div className="container mx-auto p-4 float-right">
         <CalendarMonth />
-      </div>
+    </div>
     </>
   );
 }

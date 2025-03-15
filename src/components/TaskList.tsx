@@ -31,7 +31,7 @@ export default function TaskList({
         ))}
       </div>
       {tasks.length === 0 && (
-        <p className="text-center text-sm text-gray-500">
+        <p className="text-sm text-gray-500">
           {" "}
           No tasks yet. Add a new one above.
         </p>

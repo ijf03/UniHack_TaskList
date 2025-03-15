@@ -13,19 +13,19 @@ export default function TaskItem({
   onDelete,
 }: TaskItemProps) {
   return (
-    <div className="flex items-center gap-1">
-      <label className="flex items-center gap-2 border roundded-md p-2 border-gray-400 bg-white hover:bg-emerald-500 text-black grow">
+    <div className="flex items-center gap-2 p-3 border border-gray-400 bg-white rounded-md shadow-sm w-full">
+      <label className="flex items-center gap-2 w-full">
         <input
           type="checkbox"
           checked={task.completed}
           onChange={(e) => onCompletedChange(task.id, e.target.checked)}
           className="scale-125"
         />
-        <span className={task.completed ? "line-through text-gray-400" : ""}>
+        <span className={`flex-grow ${task.completed ? "line-through text-gray-400" : "text-black"}`}>
           {task.title}
         </span>
       </label>
-      <button className="p-2" onClick={() => onDelete(task.id)}>
+      <button className="p-2 hover:bg-gray-200 rounded-md" onClick={() => onDelete(task.id)}>
         <Trash2 size={20} className="text-gray-500" />
       </button>
     </div>
