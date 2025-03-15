@@ -1,4 +1,5 @@
 import React from 'react'
+import './App.css'
 import AddTaskForm from './components/TasklistForm'
 import TaskList from './components/TaskList'
 import useTasks from "./hooks/useTasks";
