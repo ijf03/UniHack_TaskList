@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import tailwindcss from '@tailwindcss/vite'
 
 
 interface AddTaskFormProps {
@@ -23,12 +24,11 @@ export default function AddTaskForm({onSubmit}: AddTaskFormProps) {
                 <input 
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
-                        placeholder="What shit do you need to do?" 
+                        placeholder="Shit to do..." 
                         className="rounded-s-md grow border border-gray-400"
                 />
                 <button 
                 type="submit"
-                className="bg-emerald-500 text-white rounded-e-md hover:bg-emerald-800"
                 >
                     Add
                 </button>
