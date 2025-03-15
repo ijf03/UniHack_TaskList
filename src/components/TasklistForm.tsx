@@ -24,7 +24,7 @@ export default function AddTaskForm({onSubmit}: AddTaskFormProps) {
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                         placeholder="What shit do you need to do?" 
-                        className="ounded-s-md grow border border-gray-400"
+                        className="rounded-s-md grow border border-gray-400"
                 />
                 <button 
                 type="submit"
