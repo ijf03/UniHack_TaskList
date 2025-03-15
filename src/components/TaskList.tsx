@@ -1,41 +1,58 @@
+import { useState } from "react";
 import TaskItem from "./TaskListItem";
+import TasklistForm from "./TasklistForm";
 import { Task } from "../types/task";
 
-interface TaskListProps {
-  tasks: Task[];
-  onCompletedChange: (id: number, completed: boolean) => void;
-  onDelete: (id: number) => void;
-}
+export default function TaskList() {
+  const [tasks, setTasks] = useState<Task[]>([]);
 
-export default function TaskList({
-  tasks,
-  onCompletedChange,
-  onDelete,
-}: TaskListProps) {
-  const tasksSorted = tasks.sort((a, b) => {
+  function handleAddTask(title: string, deadline: Date) {
+    const newTask: Task = {
+      id: tasks.length + 1,
+      title,
+      completed: false,
+      deadline
+    };
+    setTasks([...tasks, newTask]);
+  }
+
+  function handleCompletedChange(id: number, completed: boolean) {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === id ? { ...task, completed } : task
+      )
+    );
+  }
+
+  function handleDeleteTask(id: number) {
+    setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+  }
+
+  const tasksSorted = [...tasks].sort((a, b) => {
     if (a.completed === b.completed) {
       return b.id - a.id;
     }
     return a.completed ? 1 : -1;
   });
+
   return (
-    <>
+    <div>
+      <TasklistForm onSubmit={handleAddTask} />
       <div className="space-y-2">
         {tasksSorted.map((task) => (
           <TaskItem
             key={task.id}
             task={task}
-            onCompletedChange={onCompletedChange}
-            onDelete={onDelete}
+            onCompletedChange={handleCompletedChange}
+            onDelete={handleDeleteTask}
           />
         ))}
       </div>
       {tasks.length === 0 && (
         <p className="text-sm text-gray-500">
-          {" "}
-          No tasks yet. Add a new one above.
+          You're free... for now.
         </p>
       )}
-    </>
+    </div>
   );
 }
