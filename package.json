@@ -11,6 +11,7 @@
     "pretty": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json}\""
   },
   "dependencies": {
+    "@daypilot/daypilot-lite-react": "^3.32.1",
     "@tailwindcss/vite": "^4.0.14",
     "lucide-react": "^0.482.0",
     "react": "^19.0.0",
