@@ -1,6 +1,7 @@
 import React from "react";
 import { DayPilotMonth } from "@daypilot/daypilot-lite-react";
 import { Task } from "../types/task";
+import "../css/CalendarStyles.css";
 
 interface CalendarMonthProps {
   tasks: Task[];

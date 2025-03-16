@@ -1,0 +1,30 @@
+.calendar-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .custom-calendar .daypilot-month {
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background-color: white;
+  }
+  
+  .custom-calendar .daypilot-month-header {
+    background-color: #f9ada0;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .custom-calendar .daypilot-month-day {
+    border: 1px solid #ddd;
+  }
+  
+  .custom-calendar .daypilot-event {
+    background-color: #f9627d !important; 
+    color: white !important;
+    border-radius: 5px;
+    padding: 5px;
+  }
+  
