@@ -29,7 +29,7 @@ export default function TaskItem({
           </span>
         </label>
         <p className="text-sm text-gray-500">
-          Deadline: {task.deadline.toDateString()}
+          Deadline: {task.deadline.toDateString()} {task.deadline.toLocaleTimeString()}
         </p>
       </div>
       <button

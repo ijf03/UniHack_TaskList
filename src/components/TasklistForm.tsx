@@ -31,9 +31,8 @@ export default function TasklistForm({ onSubmit }: TasklistFormProps) {
           className="flex-grow p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-400 focus:outline-none"
         />
 
-        {/* cal date picker deadline */}
         <input
-          type="date"
+          type="datetime-local"
           value={deadline}
           onChange={(e) => setDeadline(e.target.value)}
           className="p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald-400 focus:outline-none"
