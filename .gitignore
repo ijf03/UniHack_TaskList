@@ -43,3 +43,4 @@ coverage
 
 # Vite
 .vite/
+server/database/tasks.db
