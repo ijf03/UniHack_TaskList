@@ -16,8 +16,26 @@ export default function TaskItem({
   const deadline =
     task.deadline instanceof Date ? task.deadline : new Date(task.deadline);
 
+  const now = new Date();
+  const isPastDeadline = deadline < now && !task.completed;
+
+  // Determine background color based on task status
+  const getBgColor = () => {
+    if (task.completed) return "bg-green-50";
+    if (isPastDeadline) return "bg-red-50";
+    return "bg-white";
+  };
+
+  // Text color for the deadline
+  const getDeadlineTextColor = () =>
+    isPastDeadline ? "text-red-600 font-medium" : "text-gray-500";
+
   return (
-    <div className="flex items-center justify-between p-3 border border-gray-400 bg-white rounded-md shadow-sm w-full">
+    <div
+      className={`flex items-center justify-between p-3 border ${
+        isPastDeadline ? "border-red-300" : "border-gray-400"
+      } ${getBgColor()} rounded-md shadow-sm w-full`}
+    >
       <div>
         <label className="flex items-center gap-2">
           <input
@@ -32,8 +50,9 @@ export default function TaskItem({
             {task.title}
           </span>
         </label>
-        <p className="text-sm text-gray-500">
+        <p className={`text-sm ${getDeadlineTextColor()}`}>
           Deadline: {deadline.toDateString()} {deadline.toLocaleTimeString()}
+          {isPastDeadline && " (Overdue)"}
         </p>
       </div>
       <button
