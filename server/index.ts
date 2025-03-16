@@ -2,13 +2,22 @@ import express, { Request, Response, RequestHandler } from "express";
 import cors from "cors";
 import { initializeDb } from "./database/db";
 import cron from "node-cron";
-import fetch from "node-fetch"; // Add this import
+import fetch from "node-fetch";
+import dotenv from "dotenv";
+
+// Load environment variables from .env file
+dotenv.config();
 
 // Constants
 const app = express();
 const PORT = 3001;
-const GROK_API_KEY =
-  "xai-pxfTWbCbVEU21uQSdrIkLjGyF2vzao89SfWHl3GvG6y0KpvmIXftCJYiWh84nJb78RS8VHkKrh655WPd"; // Replace with environment variable later
+const GROK_API_KEY = process.env.GROK_API_KEY || "";
+
+// Verify API key is available
+if (!GROK_API_KEY) {
+  console.error("GROK_API_KEY is not defined in environment variables");
+  process.exit(1); // Exit if the key is missing
+}
 
 // Middleware
 app.use(cors()); // Allow React frontend to communicate with this server
