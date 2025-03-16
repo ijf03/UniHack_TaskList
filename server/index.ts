@@ -12,10 +12,17 @@ dotenv.config();
 const app = express();
 const PORT = 3001;
 const GROK_API_KEY = process.env.GROK_API_KEY || "";
+const BREVO_API_KEY = process.env.BREVO_API_KEY || "";
 
-// Verify API key is available
+// Verify Grok API key is available
 if (!GROK_API_KEY) {
   console.error("GROK_API_KEY is not defined in environment variables");
+  process.exit(1); // Exit if the key is missing
+}
+
+// Verify Brevo API key is available
+if (!BREVO_API_KEY) {
+  console.error("BREVO_API_KEY is not defined in environment variables");
   process.exit(1); // Exit if the key is missing
 }
 
@@ -66,6 +73,65 @@ async function getBeratingMessage(taskTitle: string): Promise<string> {
   }
 }
 
+// Function to send an email via Brevo API
+async function sendTaskOverdueEmail(
+  taskTitle: string,
+  beratingMessage: string
+): Promise<boolean> {
+  try {
+    const API_URL = "https://api.brevo.com/v3/smtp/email";
+
+    const emailData = {
+      sender: {
+        name: "Lock TF In",
+        email: "locktfin.tasklist@gmail.com",
+      },
+      to: [
+        {
+          email: "hbre0004@student.monash.edu",
+          name: "Task Owner",
+        },
+      ],
+      subject: `Task "${taskTitle}" is overdue!`,
+      //   <h1>Task "${taskTitle}" is overdue!</h1>
+      //   <h2>Message from Grok:</h2>
+      htmlContent: `
+        <html>
+          <body>
+            <div style="padding: 15px; background-color: #f8f8f8; border-left: 5px solid #ff4444; margin: 20px 0;">
+              <p>${beratingMessage.replace(/\n/g, "<br>")}</p>
+            </div>
+            <p>Get your shit together and complete your tasks on time!</p>
+          </body>
+        </html>
+      `,
+    };
+
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "api-key": BREVO_API_KEY,
+      },
+      body: JSON.stringify(emailData),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("Brevo API error:", errorData);
+      return false;
+    }
+
+    const result = await response.json();
+    console.log("Email sent successfully:", result);
+    return true;
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return false;
+  }
+}
+
 // Database initialization
 let db: any;
 initializeDb().then((database) => {
@@ -109,10 +175,19 @@ async function checkForExpiredTasks() {
 
       // Get berating message from Grok API
       const beratingMessage = await getBeratingMessage(task.task_title);
-
-      // In the future, this is where you'd send an email with the beratingMessage
-      // For now, just log to console
       console.log(`Grok says: ${beratingMessage}`);
+
+      // Send email with the berating message
+      const emailSent = await sendTaskOverdueEmail(
+        task.task_title,
+        beratingMessage
+      );
+
+      if (emailSent) {
+        console.log(`Sent email notification for task "${task.task_title}"`);
+      } else {
+        console.error(`Failed to send email for task "${task.task_title}"`);
+      }
 
       // Mark the task as having had a reminder sent
       await db.run(
