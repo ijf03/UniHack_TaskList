@@ -1,3 +1,5 @@
+import React from "react";
+
 const sendEmail = async () => {
     const API_KEY = "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";
     const API_URL = "https://api.brevo.com/v3/smtp/email"; // Brevo (formerly Sendinblue) API URL
