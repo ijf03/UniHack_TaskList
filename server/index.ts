@@ -2,14 +2,60 @@ import express, { Request, Response, RequestHandler } from "express";
 import cors from "cors";
 import { initializeDb } from "./database/db";
 import cron from "node-cron";
+import fetch from "node-fetch"; // Add this import
 
 // Constants
 const app = express();
 const PORT = 3001;
+const GROK_API_KEY =
+  "xai-pxfTWbCbVEU21uQSdrIkLjGyF2vzao89SfWHl3GvG6y0KpvmIXftCJYiWh84nJb78RS8VHkKrh655WPd"; // Replace with environment variable later
 
 // Middleware
 app.use(cors()); // Allow React frontend to communicate with this server
 app.use(express.json()); // Parse JSON request bodies
+
+// Function to get berating message from Grok API
+async function getBeratingMessage(taskTitle: string): Promise<string> {
+  try {
+    const url = "https://api.x.ai/v1/chat/completions";
+
+    const payload = {
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are part of a scheduler application. You berate the user if they do not do a task. Include a lot of swear words. You're going to be given the task that the user did not complete.",
+        },
+        {
+          role: "user",
+          content: `I did not do task "${taskTitle}"`,
+        },
+      ],
+      model: "grok-2-latest",
+      stream: false,
+      temperature: 0,
+    };
+
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${GROK_API_KEY}`,
+    };
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(payload),
+    });
+
+    const data = (await response.json()) as {
+      choices: { message: { content: string } }[]; // assert that it's well-formed
+    };
+    return data.choices[0].message.content;
+  } catch (error) {
+    console.error("Error calling Grok API:", error);
+    return "Failed to generate a berating message.";
+  }
+}
 
 // Database initialization
 let db: any;
@@ -52,8 +98,12 @@ async function checkForExpiredTasks() {
         `DEADLINE EXPIRED: Task "${task.task_title}" was due on ${new Date(task.task_deadline).toLocaleString()}`
       );
 
-      // In the future, this is where you'd send an email
+      // Get berating message from Grok API
+      const beratingMessage = await getBeratingMessage(task.task_title);
+
+      // In the future, this is where you'd send an email with the beratingMessage
       // For now, just log to console
+      console.log(`Grok says: ${beratingMessage}`);
 
       // Mark the task as having had a reminder sent
       await db.run(
