@@ -12,6 +12,10 @@ export default function TaskItem({
   onCompletedChange,
   onDelete,
 }: TaskItemProps) {
+  // Ensure deadline is a Date object
+  const deadline =
+    task.deadline instanceof Date ? task.deadline : new Date(task.deadline);
+
   return (
     <div className="flex items-center justify-between p-3 border border-gray-400 bg-white rounded-md shadow-sm w-full">
       <div>
@@ -29,7 +33,7 @@ export default function TaskItem({
           </span>
         </label>
         <p className="text-sm text-gray-500">
-          Deadline: {task.deadline.toDateString()} {task.deadline.toLocaleTimeString()}
+          Deadline: {deadline.toDateString()} {deadline.toLocaleTimeString()}
         </p>
       </div>
       <button
