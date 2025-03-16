@@ -7,16 +7,22 @@ html, body {
 }
 
 .calendar-container {
-    background-color: #f8f9fa;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  flex-grow: 1; /* Takes remaining space */
+  max-width: 65vw; /* Limits width to 65% */
+  min-width: 600px; /* Prevents it from shrinking too much */
+  overflow: hidden; /* Prevents unwanted overflow */
+  margin: 20px; /* Adds margin around the calendar */
+  padding: 10px; /* Optional: Adds space inside */
+  border-radius: 10px; /* Optional: Rounds the corners */
+  background-color: white;
+    
   }
   
   .custom-calendar .daypilot-month {
     border-radius: 10px;
     border: 1px solid #ddd;
     background-color: white;
+    padding: 2rem;
   }
   
   .custom-calendar .daypilot-month-header {

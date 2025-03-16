@@ -23,7 +23,7 @@ export default function TaskList({ tasks, onAddTask, onUpdateTask, onDeleteTask 
           />
         ))}
       </div>
-      {tasks.length === 0 && <p className="text-sm text-gray-500">You're free... for now.</p>}
+      {tasks.length === 0 && <p className="text-sm text-gray-500 p-4">You're free... for now.</p>}
     </div>
   );
 }

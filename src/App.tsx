@@ -35,7 +35,9 @@ function App() {
           onDeleteTask={deleteTask}
         />
       </div>
-      <CalendarMonth tasks={tasks} />
+
+        <CalendarMonth tasks={tasks}/>
+    
     </div>
     </>
   );
