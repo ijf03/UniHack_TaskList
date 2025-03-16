@@ -93,15 +93,12 @@ async function sendTaskOverdueEmail(
         },
       ],
       subject: `Task "${taskTitle}" is overdue!`,
-      //   <h1>Task "${taskTitle}" is overdue!</h1>
-      //   <h2>Message from Grok:</h2>
       htmlContent: `
         <html>
           <body>
             <div style="padding: 15px; background-color: #f8f8f8; border-left: 5px solid #ff4444; margin: 20px 0;">
               <p>${beratingMessage.replace(/\n/g, "<br>")}</p>
             </div>
-            <p>Get your shit together and complete your tasks on time!</p>
           </body>
         </html>
       `,
