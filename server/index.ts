@@ -1,6 +1,7 @@
 import express, { Request, Response, RequestHandler } from "express";
 import cors from "cors";
 import { initializeDb } from "./database/db";
+import cron from "node-cron";
 
 // Constants
 const app = express();
@@ -14,7 +15,75 @@ app.use(express.json()); // Parse JSON request bodies
 let db: any;
 initializeDb().then((database) => {
   db = database;
+  // Setup deadline checker once database is ready
+  setupDeadlineChecker();
 });
+
+// Function to check for expired tasks
+async function checkForExpiredTasks() {
+  try {
+    console.log("Checking for expired tasks...");
+    const now = new Date().toISOString();
+
+    // Find tasks that:
+    // 1. Are not completed
+    // 2. Have passed their deadline
+    // 3. Haven't had a reminder sent yet
+    const expiredTasks = await db.all(
+      `
+      SELECT * FROM tasks 
+      WHERE task_completed = 0 
+      AND task_deadline < ? 
+      AND task_reminder_sent = 0
+    `,
+      [now]
+    );
+
+    if (expiredTasks.length === 0) {
+      console.log("No expired tasks found");
+      return;
+    }
+
+    console.log(`Found ${expiredTasks.length} expired tasks`);
+
+    // Process each expired task
+    for (const task of expiredTasks) {
+      console.log(
+        `DEADLINE EXPIRED: Task "${task.task_title}" was due on ${new Date(task.task_deadline).toLocaleString()}`
+      );
+
+      // In the future, this is where you'd send an email
+      // For now, just log to console
+
+      // Mark the task as having had a reminder sent
+      await db.run(
+        `
+        UPDATE tasks 
+        SET task_reminder_sent = 1 
+        WHERE task_id = ?
+      `,
+        [task.task_id]
+      );
+
+      console.log(`Marked task ID ${task.task_id} as reminded`);
+    }
+  } catch (error) {
+    console.error("Error checking for expired tasks:", error);
+  }
+}
+
+// Setup a scheduled job to run the deadline checker
+function setupDeadlineChecker() {
+  // Check twice per minute (every 30 seconds)
+  cron.schedule("*/30 * * * * *", () => {
+    checkForExpiredTasks();
+  });
+
+  console.log("Task deadline checker scheduled (runs every 30 seconds)");
+
+  // Also run once on server start to check for any tasks that expired while server was down
+  checkForExpiredTasks();
+}
 
 // API endpoints
 const getTasks: RequestHandler = async (req: Request, res: Response) => {
