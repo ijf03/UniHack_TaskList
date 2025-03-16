@@ -1,10 +1,8 @@
-import React from 'react';
+import React from "react";
 import { DayPilotMonth } from "@daypilot/daypilot-lite-react";
 
 const CalendarMonth = () => {
-  return (
-    <DayPilotMonth />
-  );
+  return <DayPilotMonth />;
 };
 
 export default CalendarMonth;

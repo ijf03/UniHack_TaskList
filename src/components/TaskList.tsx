@@ -18,7 +18,7 @@ export default function TaskList() {
 
   function handleCompletedChange(id: number, completed: boolean) {
     setTasks((prevTasks) =>
-      prevTasks.map((task) => (task.id === id ? { ...task, completed } : task))
+      prevTasks.map((task) => (task.id === id ? { ...task, completed } : task)),
     );
   }
 
