@@ -1,5 +1,6 @@
 import { Trash2 } from "lucide-react";
 import { Task } from "../types/task";
+import { useEffect, useState } from "react";
 
 interface TaskItemProps {
   task: Task;
@@ -16,8 +17,30 @@ export default function TaskItem({
   const deadline =
     task.deadline instanceof Date ? task.deadline : new Date(task.deadline);
 
-  const now = new Date();
-  const isPastDeadline = deadline < now && !task.completed;
+  // Track overdue status in state so we can update it
+  const [isPastDeadline, setIsPastDeadline] = useState<boolean>(
+    deadline < new Date() && !task.completed
+  );
+
+  // Check deadline status every 10 seconds
+  useEffect(() => {
+    // Skip for completed tasks
+    if (task.completed) return;
+
+    // Initial check
+    setIsPastDeadline(deadline < new Date());
+
+    // Set up interval to check deadline status
+    const timer = setInterval(() => {
+      const isOverdue = deadline < new Date();
+      if (isOverdue !== isPastDeadline) {
+        setIsPastDeadline(isOverdue);
+      }
+    }, 10000); // Check every 10 seconds
+
+    // Clean up interval when component unmounts
+    return () => clearInterval(timer);
+  }, [deadline, task.completed, isPastDeadline]);
 
   // Determine background color based on task status
   const getBgColor = () => {
