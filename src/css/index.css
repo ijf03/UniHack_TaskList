@@ -37,7 +37,9 @@ body {
   margin: 0;
   min-width: 100vw;
   min-height: 100vh;
-  display: block;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
 }
 
 
