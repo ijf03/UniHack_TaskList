@@ -11,16 +11,14 @@ export default function TaskList() {
       id: tasks.length + 1,
       title,
       completed: false,
-      deadline
+      deadline,
     };
     setTasks([...tasks, newTask]);
   }
 
   function handleCompletedChange(id: number, completed: boolean) {
     setTasks((prevTasks) =>
-      prevTasks.map((task) =>
-        task.id === id ? { ...task, completed } : task
-      )
+      prevTasks.map((task) => (task.id === id ? { ...task, completed } : task))
     );
   }
 
@@ -49,9 +47,7 @@ export default function TaskList() {
         ))}
       </div>
       {tasks.length === 0 && (
-        <p className="text-sm text-gray-500">
-          You're free... for now.
-        </p>
+        <p className="text-sm text-gray-500">You're free... for now.</p>
       )}
     </div>
   );
