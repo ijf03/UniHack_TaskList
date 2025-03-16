@@ -88,7 +88,7 @@ async function sendTaskOverdueEmail(
       },
       to: [
         {
-          email: "hbre0004@student.monash.edu",
+          email: "bethany.aung@gmail.com",
           name: "Task Owner",
         },
       ],
